@@ -1,15 +1,10 @@
-FROM registry.redhat.io/rhel8/go-toolset:1.15 AS builder
+FROM docker.io/golang:1.16 as build
 
-WORKDIR $GOPATH/src/code
+WORKDIR /go/src/app
 COPY . .
-ENV GO111MODULE=on
-USER root
-RUN go get -d -v
-RUN CGO_ENABLED=0 go build -o /go/bin/main
 
+RUN CGO_ENABLED=0 go build -installsuffix nocgo -o app-bin .
 
-FROM registry.redhat.io/ubi8-minimal:latest
-
-COPY --from=builder /go/bin/main /usr/bin
-USER 1001
-CMD ["main"]
+FROM docker.io/alpine
+COPY  --from=build /go/src/app/app-bin ./
+ENTRYPOINT ["./app-bin"]
