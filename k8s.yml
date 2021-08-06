@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shutting-down-gracefully
+  labels:
+      app: shutting-down-gracefully
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shutting-down-gracefully
+  template:
+    metadata:
+      labels:
+        app: shutting-down-gracefully
+    spec:
+      containers:
+        - name: shutting-down-gracefully
+          image: docker.io/biancarosa/shutting-down-gracefully:59098f4
+          ports:
+          - containerPort: 8090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shutting-down-gracefully
+spec:
+  selector:
+    app: shutting-down-gracefully
+  ports:
+    - protocol: TCP
+      port: 8090
+      targetPort: 8090

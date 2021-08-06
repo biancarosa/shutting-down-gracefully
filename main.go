@@ -45,5 +45,9 @@ func main() {
 	}()
 
 	fmt.Println("Listening on 8090...")
-	server.ListenAndServe()
+	err := server.ListenAndServe()
+	fmt.Println(err)
+
+	<-gracefulStop
+	fmt.Println("Everything has shut down, goodbye")
 }
