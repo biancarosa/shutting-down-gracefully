@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: shutting-down-gracefully
-          image: docker.io/biancarosa/shutting-down-gracefully:2c4edba
+          image: docker.io/biancarosa/shutting-down-gracefully:40100af
           ports:
           - containerPort: 8090
           livenessProbe:
