@@ -23,13 +23,17 @@ func doStuff(w http.ResponseWriter, req *http.Request) {
 	}()
 	fmt.Fprintf(w, "Doing background stuff for 10 minutes...\n")
 }
+func healthCheck(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "Ok\n")
+}
 
 func main() {
 	fmt.Println("Hello world.")
 	server := http.Server{
 		Addr: fmt.Sprintf(":%d", 8090),
 	}
-	http.HandleFunc("/", doStuff)
+	http.HandleFunc("/", healthCheck)
+	http.HandleFunc("/do-stuff", doStuff)
 
 	gracefulStop := make(chan struct{})
 	go func() {
