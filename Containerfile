@@ -5,6 +5,6 @@ COPY . .
 
 RUN CGO_ENABLED=0 go build -installsuffix nocgo -o app-bin .
 
-FROM docker.io/alpine
+FROM scratch
 COPY  --from=build /go/src/app/app-bin ./
 ENTRYPOINT ["./app-bin"]
