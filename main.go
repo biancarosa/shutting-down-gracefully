@@ -17,7 +17,7 @@ func doStuff(w http.ResponseWriter, req *http.Request) {
 	fmt.Println("One new request...")
 	wg.Add(1)
 	go func() {
-		duration := time.Duration(10) * time.Minute
+		duration := time.Duration(1) * time.Minute
 		time.Sleep(duration)
 		fmt.Println("One request sucessfully finished...")
 		wg.Done()
@@ -43,6 +43,7 @@ func main() {
 		<-sigint
 		fmt.Println("Shutting down gracefully...")
 		wg.Wait()
+		fmt.Println("All background stuff are done...")
 		if err := server.Shutdown(context.Background()); err != nil {
 			fmt.Println("HTTP Server Shutdown failed")
 		}
