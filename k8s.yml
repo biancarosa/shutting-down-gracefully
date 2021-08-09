@@ -14,6 +14,7 @@ spec:
       labels:
         app: shutting-down-gracefully
     spec:
+      terminationGracePeriodSeconds: 120
       containers:
         - name: shutting-down-gracefully
           image: docker.io/biancarosa/shutting-down-gracefully:40100af
