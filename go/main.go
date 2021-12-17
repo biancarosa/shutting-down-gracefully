@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -11,6 +14,7 @@ const (
 )
 
 func main() {
+
 	fmt.Println("Hello world")
 	for i := 0; i < N; i++ {
 		fmt.Printf("%d of %d", i, N)
@@ -19,4 +23,15 @@ func main() {
 			time.Sleep(Mins * time.Minute)
 		}()
 	}
+
+	gracefulStop := make(chan struct{})
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt, syscall.SIGTERM)
+		<-sigint
+		close(gracefulStop)
+	}()
+
+	<-gracefulStop
+	fmt.Println("Everything has shut down, goodbye")
 }
