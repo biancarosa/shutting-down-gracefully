@@ -15,11 +15,14 @@ const (
 func main() {
 
 	fmt.Println("Hello world")
+
+	goroutines := make(chan bool, N)
 	for i := 0; i < N; i++ {
-		fmt.Printf("%d of %d", i, N)
+		fmt.Printf("%d of %d\n", i, N)
 		go func() {
 			fmt.Println("A slow running goroutine....")
 			time.Sleep(Mins * time.Minute)
+			goroutines <- true
 		}()
 	}
 
@@ -28,6 +31,9 @@ func main() {
 		sigint := make(chan os.Signal, 1)
 		signal.Notify(sigint, os.Interrupt)
 		<-sigint
+		for i := 0; i < N; i++ {
+			<-goroutines
+		}
 		close(gracefulStop)
 	}()
 
