@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"os/signal"
 	"sync"
 	"time"
 )
@@ -13,30 +11,44 @@ const (
 	Seconds = 10
 )
 
+type Status string
+
+const (
+	Started  Status = "STARTED"
+	Finished Status = "FINISHED"
+)
+
+type Task struct {
+	ID     int
+	Status Status
+}
+
 func main() {
 
 	fmt.Println("Hello world")
 
 	var wg sync.WaitGroup
+	tasks := make([]*Task, N)
 	for i := 0; i < N; i++ {
 		fmt.Printf("%d of %d\n", i, N)
+		task := Task{
+			ID:     i,
+			Status: Started,
+		}
 		wg.Add(1)
-		go func() {
-			fmt.Println("A slow running goroutine....")
+		tasks[i] = &task
+		go func(t *Task) {
+			fmt.Println("A slow running goroutine started....")
 			time.Sleep(Seconds * time.Second)
+			task.Status = Finished
 			wg.Done()
-		}()
+		}(&task)
 	}
 
-	gracefulStop := make(chan struct{})
-	go func() {
-		sigint := make(chan os.Signal, 1)
-		signal.Notify(sigint, os.Interrupt)
-		<-sigint
-		wg.Wait()
-		close(gracefulStop)
-	}()
+	wg.Wait()
 
-	<-gracefulStop
+	for i, t := range tasks {
+		fmt.Printf("Index %d of Task ID %d has status %s\n", i, t.ID, t.Status)
+	}
 	fmt.Println("Everything has shut down, goodbye")
 }
