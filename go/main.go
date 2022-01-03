@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	N    = 50
-	Mins = 1
+	N       = 50
+	Seconds = 10
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 		wg.Add(1)
 		go func() {
 			fmt.Println("A slow running goroutine....")
-			time.Sleep(Mins * time.Minute)
+			time.Sleep(Seconds * time.Second)
 			wg.Done()
 		}()
 	}
