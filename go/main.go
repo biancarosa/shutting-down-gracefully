@@ -16,8 +16,9 @@ const (
 type Status string
 
 const (
-	Started  Status = "STARTED"
-	Finished Status = "FINISHED"
+	Started     Status = "STARTED"
+	Finished    Status = "FINISHED"
+	Interrupted Status = "INTERRUPTED"
 )
 
 type Task struct {
@@ -44,6 +45,14 @@ func main() {
 			time.Sleep(Seconds * time.Second)
 			fmt.Println("A slow running goroutine finished....")
 			task.Status = Finished
+			go func() {
+				sigint := make(chan os.Signal, 1)
+				signal.Notify(sigint, os.Interrupt)
+				<-sigint
+				// Is it possible to have a race condition here? Yes.
+				wg.Done()
+				task.Status = Interrupted
+			}()
 			wg.Done()
 		}(&task)
 	}
