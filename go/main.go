@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
 	"sync"
 	"time"
 )
@@ -40,15 +42,25 @@ func main() {
 		go func(t *Task) {
 			fmt.Println("A slow running goroutine started....")
 			time.Sleep(Seconds * time.Second)
+			fmt.Println("A slow running goroutine finished....")
 			task.Status = Finished
 			wg.Done()
 		}(&task)
 	}
 
+	go func() {
+		sigint := make(chan os.Signal, 1)
+		signal.Notify(sigint, os.Interrupt)
+		fmt.Println("Waiting for signal...")
+		<-sigint
+		fmt.Println("Received an interrupt...")
+		wg.Wait()
+		for i, t := range tasks {
+			fmt.Printf("Index %d of Task ID %d has status %s\n", i, t.ID, t.Status)
+		}
+	}()
+
 	wg.Wait()
 
-	for i, t := range tasks {
-		fmt.Printf("Index %d of Task ID %d has status %s\n", i, t.ID, t.Status)
-	}
 	fmt.Println("Everything has shut down, goodbye")
 }
