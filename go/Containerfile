@@ -1,0 +1,10 @@
+FROM docker.io/golang:1.17 as build
+
+WORKDIR /go/src/app
+COPY . .
+
+RUN CGO_ENABLED=0 go build -installsuffix nocgo -o app-bin .
+
+FROM scratch
+COPY  --from=build /go/src/app/app-bin ./
+ENTRYPOINT ["./app-bin"]

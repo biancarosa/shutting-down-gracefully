@@ -27,9 +27,7 @@ type Task struct {
 }
 
 func main() {
-
 	fmt.Println("Hello world")
-
 	var wg sync.WaitGroup
 	tasks := make([]*Task, N)
 	for i := 0; i < N; i++ {
@@ -43,9 +41,7 @@ func main() {
 		go func() {
 			sigint := make(chan os.Signal, 1)
 			signal.Notify(sigint, os.Interrupt)
-			fmt.Println("Waiting for signal internally...")
 			<-sigint
-			fmt.Println("Received an interrupt internally..")
 			// Is it possible to have a race condition here? Yes.
 			wg.Done()
 			task.Status = Interrupted
