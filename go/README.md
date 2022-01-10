@@ -14,16 +14,11 @@ Code written after a real-life challenge at work on Red Hat's edge-api, and put 
 
 ## Running on detached mode
 
-On one terminal, run:
 
 `podman run --rm --name devconf -d devconf`
-
-On a second terminal, run:
-
-`podman logs -f devconf`
 
 ## Stopping the container
 
 `podman stop devconf`
 
-`podman stop devconf -t 60`
+`podman logs -l`
