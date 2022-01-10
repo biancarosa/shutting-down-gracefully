@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devconf
+  labels:
+      app: devconf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devconf
+  template:
+    metadata:
+      labels:
+        app: devconf
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: devconf
+          image: docker.io/biancarosa/devconf:v1.0.0

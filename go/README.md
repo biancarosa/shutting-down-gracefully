@@ -22,3 +22,7 @@ Code written after a real-life challenge at work on Red Hat's edge-api, and put 
 `podman stop devconf`
 
 `podman logs -l`
+
+## Terminating on Kubernetes environment
+
+`watch -n 1 kubectl get pods`
