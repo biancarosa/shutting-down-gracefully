@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -40,12 +41,12 @@ func main() {
 		tasks[i] = &task
 		go func() {
 			sigint := make(chan os.Signal, 1)
-			signal.Notify(sigint, os.Interrupt)
+			signal.Notify(sigint, os.Interrupt, syscall.SIGTERM)
 			<-sigint
-			// Is it possible to have a race condition here? Yes.
-			wg.Done()
 			task.Status = Interrupted
 			fmt.Printf("Interrupted Task ID %d\n", task.ID)
+			// Is it possible to have a race condition here? Yes.
+			wg.Done()
 
 		}()
 		go func(t *Task) {
