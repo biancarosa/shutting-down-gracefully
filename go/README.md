@@ -4,25 +4,4 @@ Ensures all goroutines are finished with their worked or wrapped-up their curren
 
 Code written after a real-life challenge at work on Red Hat's edge-api, and put onto a talk format for DevConf.cz.
 
-## Building the container
-
-`podman build . -t devconf`
-
-## Running the container
-
-`podman run devconf`
-
-## Running on detached mode
-
-
-`podman run --rm --name devconf -d devconf`
-
-## Stopping the container
-
-`podman stop devconf`
-
-`podman logs -l`
-
-## Terminating on Kubernetes environment
-
-`watch -n 1 kubectl get pods`
+Slides for the talk: [https://slides.com/bianca_rosa/shutting-down-goroutines-gracefully](https://slides.com/bianca_rosa/shutting-down-goroutines-gracefully)
