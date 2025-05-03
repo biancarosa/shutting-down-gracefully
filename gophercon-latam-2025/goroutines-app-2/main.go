@@ -21,5 +21,8 @@ func main() {
 			fmt.Printf("%d of %d: A slow running goroutine finished....\n", i, N)
 		}(i)
 	}
+
+	time.Sleep(Seconds * time.Second * 2)
+
 	fmt.Println("Everything has shut down, goodbye")
 }
