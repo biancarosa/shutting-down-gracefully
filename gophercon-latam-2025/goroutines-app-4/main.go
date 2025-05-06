@@ -10,7 +10,6 @@ import (
 	"syscall"
 )
 
-
 const (
 	N       = 10
 	Seconds = 10
@@ -35,13 +34,13 @@ func main() {
 	gracefulStop := make(chan struct{})
 	go func() {
 		sigint := make(chan os.Signal, 1)
-		signal.Notify(sigint, os.Interrupt, syscall.SIGTERM)
+		signal.Notify(sigint, syscall.SIGINT, syscall.SIGTERM)
 		<-sigint
 		wg.Wait()
 		fmt.Println("Shutting down gracefully...")
 		close(gracefulStop)
 	}()
-	
+
 	<-gracefulStop
 	fmt.Println("Everything has shut down, goodbye")
 }
